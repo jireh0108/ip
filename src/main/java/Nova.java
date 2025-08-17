@@ -7,7 +7,7 @@ public class Nova {
     private static int listSize = 0;
 
     private enum Command {
-        list, mark, unmark, bye
+        list, mark, unmark, bye, todo, deadline, event
     }
 
     public static void main(String[] args) {
@@ -19,7 +19,7 @@ public class Nova {
         String line = scanner.nextLine();
 
         while (!line.equals("bye")) {
-            String[] parts = line.split(" ");
+            String[] parts = line.split(" ", 2);
             String commandStr = parts[0];
 
             try {
@@ -65,7 +65,7 @@ public class Nova {
                                     System.out.println(DIVIDER + "OK, I've marked this task as not done yet:\n" +
                                             curr + "\n" + DIVIDER);
                                 } else {
-                                    System.out.println(DIVIDER + "The task is already unmarked!" + DIVIDER);
+                                    System.out.println(DIVIDER + "The task is already unmarked!\n" + DIVIDER);
                                 }
                             } else {
                                 System.out.println(DIVIDER + "Invalid task number!\n" + DIVIDER);
@@ -74,14 +74,45 @@ public class Nova {
                             System.out.println(DIVIDER + "Usage: unmark <task number>\n" + DIVIDER);
                         }
                     }
-                }
 
-            } catch (IllegalArgumentException e) {
-                if (!line.isBlank()) {
-                    list[listSize] = new Task(line);
-                    listSize++;
-                    System.out.println(DIVIDER + "Added: " + line + "\n" + DIVIDER);
+                    case todo -> {
+                        String description = parts[1];
+                        Task curr = new ToDo(description);
+                        list[listSize] = curr;
+                        listSize++;
+                        System.out.println(DIVIDER + "Got it. I've added this task:\n" +
+                                "  " + curr + "\n" +
+                                "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
+                    }
+
+                    case deadline -> {
+                        String[] remainder = parts[1].split(" /by ", 2);
+                        String description = remainder[0];
+                        String deadline = remainder[1];
+                        Task curr = new Deadline(description, deadline);
+                        list[listSize] = curr;
+                        listSize++;
+                        System.out.println(DIVIDER + "Got it. I've added this task:\n" +
+                                "  " + curr + "\n" +
+                                "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
+                    }
+
+                    case event -> {
+                        String[] remainder = parts[1].split(" /from ", 2);
+                        String description = remainder[0];
+                        String[] timings = remainder[1].split(" /to ", 2);
+                        String from = timings[0];
+                        String to = timings[1];
+                        Task curr = new Event(description, from, to);
+                        list[listSize] = curr;
+                        listSize++;
+                        System.out.println(DIVIDER + "Got it. I've added this task:\n" +
+                                "  " + curr + "\n" +
+                                "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
+                    }
                 }
+            } catch (IllegalArgumentException e) {
+                System.out.println("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
             line = scanner.nextLine();
         }
