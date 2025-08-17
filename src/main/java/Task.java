@@ -13,11 +13,24 @@ public class Task {
         return (isDone ? "X" : " ");
     }
 
+    public boolean getStatus() {
+        return isDone;
+    }
+
     public String getDescription() {
         return this.description;
     }
 
     public void mark() {
-        this.isDone = !isDone;
+        this.isDone = true;
+    }
+
+    public void unmark() {
+        this.isDone = false;
+    }
+
+    @Override
+    public String toString()  {
+        return "[" + this.getStatusIcon() + "] " + this.description;
     }
 }
