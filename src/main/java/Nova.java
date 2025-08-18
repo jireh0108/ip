@@ -1,10 +1,10 @@
 package main.java;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Nova {
     private static final String DIVIDER = "____________________________________________________________\n";
-    private static final Task[] list = new Task[100];
-    private static int listSize = 0;
+    private static final ArrayList<Task> listOfTasks = new ArrayList<>();
 
     private enum Command {
         list, mark, unmark, bye, todo, deadline, event, help
@@ -32,8 +32,8 @@ public class Nova {
                 switch (command) {
                     case list -> {
                         StringBuilder taskString = new StringBuilder();
-                        for (int i = 0; i < listSize; i++) {
-                            taskString.append(i + 1).append(".").append(list[i]).append("\n");
+                        for (int i = 0; i < listOfTasks.size(); i++) {
+                            taskString.append(i + 1).append(".").append(listOfTasks.get(i)).append("\n");
                         }
                         System.out.println(DIVIDER + "Here are the tasks in your list:\n" + taskString + DIVIDER);
                     }
@@ -41,8 +41,8 @@ public class Nova {
                     case mark -> {
                         if (parts.length == 2 && parts[1].matches("\\d+")) {
                             int index = Integer.parseInt(parts[1]) - 1;
-                            if (index >= 0 && index < listSize) {
-                                Task curr = list[index];
+                            if (index >= 0 && index < listOfTasks.size()) {
+                                Task curr = listOfTasks.get(index);
                                 if (!curr.getStatus()) {
                                     curr.mark();
                                     System.out.println(DIVIDER + "Nice! I've marked this task as done:\n" +
@@ -61,8 +61,8 @@ public class Nova {
                     case unmark -> {
                         if (parts.length == 2 && parts[1].matches("\\d+")) {
                             int index = Integer.parseInt(parts[1]) - 1;
-                            if (index >= 0 && index < listSize) {
-                                Task curr = list[index];
+                            if (index >= 0 && index < listOfTasks.size()) {
+                                Task curr = listOfTasks.get(index);
                                 if (curr.getStatus()) {
                                     curr.unmark();
                                     System.out.println(DIVIDER + "OK, I've marked this task as not done yet:\n" +
@@ -85,10 +85,10 @@ public class Nova {
                         }
                         String description = parts[1];
                         Task curr = new ToDo(description);
-                        list[listSize++] = curr;
+                        listOfTasks.add(curr);
                         System.out.println(DIVIDER + "Got it. I've added this task:\n" +
                                 "  " + curr + "\n" +
-                                "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
+                                "Now you have " + listOfTasks.size() + " tasks in the list.\n" + DIVIDER);
                     }
 
                     case deadline -> {
@@ -100,10 +100,10 @@ public class Nova {
                         String description = remainder[0];
                         String deadline = remainder[1];
                         Task curr = new Deadline(description, deadline);
-                        list[listSize++] = curr;
+                        listOfTasks.add(curr);
                         System.out.println(DIVIDER + "Got it. I've added this task:\n" +
                                 "  " + curr + "\n" +
-                                "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
+                                "Now you have " + listOfTasks.size() + " tasks in the list.\n" + DIVIDER);
                     }
 
                     case event -> {
@@ -117,10 +117,10 @@ public class Nova {
                         String from = timings[0];
                         String to = timings[1];
                         Task curr = new Event(description, from, to);
-                        list[listSize++] = curr;
+                        listOfTasks.add(curr);
                         System.out.println(DIVIDER + "Got it. I've added this task:\n" +
                                 "  " + curr + "\n" +
-                                "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
+                                "Now you have " + listOfTasks.size() + " tasks in the list.\n" + DIVIDER);
                     }
 
                     case help -> {

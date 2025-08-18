@@ -4,3 +4,11 @@ deadline return book /by Sunday
 event project meeting /from Mon 2pm /to 4pm
 mark 1
 list
+deadline
+todo read book
+todo buy bread
+mark 4
+mark 5
+list
+unmark 5
+list
