@@ -12,7 +12,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 Here are the tasks in your list:
-1.[T][ ] borrow book
+  1.[T][ ] borrow book
 ____________________________________________________________
 
 ____________________________________________________________
@@ -29,14 +29,14 @@ ____________________________________________________________
 
 ____________________________________________________________
 Nice! I've marked this task as done:
-[T][X] borrow book
+  [T][X] borrow book
 ____________________________________________________________
 
 ____________________________________________________________
 Here are the tasks in your list:
-1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+  1.[T][X] borrow book
+  2.[D][ ] return book (by: Sunday)
+  3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 
 ____________________________________________________________
@@ -57,35 +57,49 @@ ____________________________________________________________
 
 ____________________________________________________________
 Nice! I've marked this task as done:
-[T][X] read book
+  [T][X] read book
 ____________________________________________________________
 
 ____________________________________________________________
 Nice! I've marked this task as done:
-[T][X] buy bread
+  [T][X] buy bread
 ____________________________________________________________
 
 ____________________________________________________________
 Here are the tasks in your list:
-1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[T][X] read book
-5.[T][X] buy bread
+  1.[T][X] borrow book
+  2.[D][ ] return book (by: Sunday)
+  3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+  4.[T][X] read book
+  5.[T][X] buy bread
 ____________________________________________________________
 
 ____________________________________________________________
 OK, I've marked this task as not done yet:
-[T][ ] buy bread
+  [T][ ] buy bread
 ____________________________________________________________
 
 ____________________________________________________________
 Here are the tasks in your list:
-1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[T][X] read book
-5.[T][ ] buy bread
+  1.[T][X] borrow book
+  2.[D][ ] return book (by: Sunday)
+  3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+  4.[T][X] read book
+  5.[T][ ] buy bread
+____________________________________________________________
+
+____________________________________________________________
+Noted. I've removed this task:
+  [T][X] read book
+Now you have 4 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+  1.[T][X] borrow book
+  2.[D][ ] return book (by: Sunday)
+  3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+  4.[T][ ] buy bread
 ____________________________________________________________
 
 ____________________________________________________________

@@ -7,7 +7,7 @@ public class Nova {
     private static final ArrayList<Task> listOfTasks = new ArrayList<>();
 
     private enum Command {
-        list, mark, unmark, bye, todo, deadline, event, help
+        list, mark, unmark, bye, todo, deadline, event, help, delete
     }
 
     public static void main(String[] args) {
@@ -31,9 +31,13 @@ public class Nova {
 
                 switch (command) {
                     case list -> {
+                        if (listOfTasks.isEmpty()) {
+                            System.out.println(DIVIDER + "There are no tasks! Try \"help\" for commands!\n" + DIVIDER);
+                            break;
+                        }
                         StringBuilder taskString = new StringBuilder();
                         for (int i = 0; i < listOfTasks.size(); i++) {
-                            taskString.append(i + 1).append(".").append(listOfTasks.get(i)).append("\n");
+                            taskString.append("  ").append(i + 1).append(".").append(listOfTasks.get(i)).append("\n");
                         }
                         System.out.println(DIVIDER + "Here are the tasks in your list:\n" + taskString + DIVIDER);
                     }
@@ -46,7 +50,7 @@ public class Nova {
                                 if (!curr.getStatus()) {
                                     curr.mark();
                                     System.out.println(DIVIDER + "Nice! I've marked this task as done:\n" +
-                                            curr + "\n" + DIVIDER);
+                                            "  " + curr + "\n" + DIVIDER);
                                 } else {
                                     System.out.println(DIVIDER + "The task is already marked!" + "\n" + DIVIDER);
                                 }
@@ -66,7 +70,7 @@ public class Nova {
                                 if (curr.getStatus()) {
                                     curr.unmark();
                                     System.out.println(DIVIDER + "OK, I've marked this task as not done yet:\n" +
-                                            curr + "\n" + DIVIDER);
+                                            "  " + curr + "\n" + DIVIDER);
                                 } else {
                                     System.out.println(DIVIDER + "The task is already unmarked!\n" + DIVIDER);
                                 }
@@ -141,6 +145,23 @@ public class Nova {
                                 "  bye\n" +
                                 "    → Exits the program.\n" +
                                 DIVIDER);
+                    }
+
+                    case delete -> {
+                        if (parts.length == 2 && parts[1].matches("\\d+")) {
+                            int index = Integer.parseInt(parts[1]) - 1;
+                            if (index >= 0 && index < listOfTasks.size()) {
+                                Task curr = listOfTasks.get(index);
+                                listOfTasks.remove(index);
+                                System.out.println(DIVIDER + "Noted. I've removed this task:\n" +
+                                        "  " + curr + "\n" +
+                                        "Now you have " + listOfTasks.size() + " tasks in the list.\n" + DIVIDER);
+                            } else {
+                                System.out.println(DIVIDER + "Invalid task number!\n" + DIVIDER);
+                            }
+                        } else {
+                            System.out.println(DIVIDER + "Usage: delete <task number>\n" + DIVIDER);
+                        }
                     }
                 }
             } catch (IllegalArgumentException e) {
