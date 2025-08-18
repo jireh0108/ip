@@ -16,9 +16,12 @@ public class Nova {
                 "Hello! I'm Nova :3\n" +
                 "What can I do for you?\n" +
                 DIVIDER);
-        String line = scanner.nextLine();
 
-        while (!line.equals("bye")) {
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.equals("bye")) {
+                break;
+            }
             String[] parts = line.split(" ", 2);
             String commandStr = parts[0];
 
@@ -32,7 +35,7 @@ public class Nova {
                         for (int i = 0; i < listSize; i++) {
                             taskString.append(i + 1).append(".").append(list[i]).append("\n");
                         }
-                        System.out.println(DIVIDER + taskString + DIVIDER);
+                        System.out.println(DIVIDER + "Here are the tasks in your list:\n" + taskString + DIVIDER);
                     }
 
                     case mark -> {
@@ -114,7 +117,6 @@ public class Nova {
             } catch (IllegalArgumentException e) {
                 System.out.println("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
-            line = scanner.nextLine();
         }
 
         System.out.println(DIVIDER + "Bye. Hope to see you again soon!\n" + DIVIDER);
