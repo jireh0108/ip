@@ -7,7 +7,7 @@ public class Nova {
     private static int listSize = 0;
 
     private enum Command {
-        list, mark, unmark, bye, todo, deadline, event
+        list, mark, unmark, bye, todo, deadline, event, help
     }
 
     public static void main(String[] args) {
@@ -15,6 +15,7 @@ public class Nova {
         System.out.println(DIVIDER +
                 "Hello! I'm Nova :3\n" +
                 "What can I do for you?\n" +
+                "Enter \"help\" to see available commands!\n" +
                 DIVIDER);
 
         while (scanner.hasNextLine()) {
@@ -24,7 +25,6 @@ public class Nova {
             }
             String[] parts = line.split(" ", 2);
             String commandStr = parts[0];
-
             try {
                 //convert input to command
                 Command command = Command.valueOf(commandStr);
@@ -79,39 +79,68 @@ public class Nova {
                     }
 
                     case todo -> {
+                        if (parts.length < 2 || parts[1].isBlank()) {
+                            System.out.println(DIVIDER + "Usage: todo <description>\n" + DIVIDER);
+                            break;
+                        }
                         String description = parts[1];
                         Task curr = new ToDo(description);
-                        list[listSize] = curr;
-                        listSize++;
+                        list[listSize++] = curr;
                         System.out.println(DIVIDER + "Got it. I've added this task:\n" +
                                 "  " + curr + "\n" +
                                 "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
                     }
 
                     case deadline -> {
+                        if (parts.length < 2 || !parts[1].contains(" /by ")) {
+                            System.out.println(DIVIDER + "Usage: deadline <description> /by <deadline>\n" + DIVIDER);
+                            break;
+                        }
                         String[] remainder = parts[1].split(" /by ", 2);
                         String description = remainder[0];
                         String deadline = remainder[1];
                         Task curr = new Deadline(description, deadline);
-                        list[listSize] = curr;
-                        listSize++;
+                        list[listSize++] = curr;
                         System.out.println(DIVIDER + "Got it. I've added this task:\n" +
                                 "  " + curr + "\n" +
                                 "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
                     }
 
                     case event -> {
+                        if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to ")) {
+                            System.out.println(DIVIDER + "Usage: event <description> /from <start> /to <end>\n" + DIVIDER);
+                            break;
+                        }
                         String[] remainder = parts[1].split(" /from ", 2);
                         String description = remainder[0];
                         String[] timings = remainder[1].split(" /to ", 2);
                         String from = timings[0];
                         String to = timings[1];
                         Task curr = new Event(description, from, to);
-                        list[listSize] = curr;
-                        listSize++;
+                        list[listSize++] = curr;
                         System.out.println(DIVIDER + "Got it. I've added this task:\n" +
                                 "  " + curr + "\n" +
                                 "Now you have " + listSize + " tasks in the list.\n" + DIVIDER);
+                    }
+
+                    case help -> {
+                        System.out.println(DIVIDER +
+                                "Here are the available commands:\n" +
+                                "  todo <description>\n" +
+                                "    → Adds a todo task. Example: todo borrow book\n\n" +
+                                "  deadline <description> /by <time>\n" +
+                                "    → Adds a task with a deadline. Example: deadline return book /by Sunday\n\n" +
+                                "  event <description> /from <start> /to <end>\n" +
+                                "    → Adds an event with a time range. Example: event project meeting /from Mon 2pm /to 4pm\n\n" +
+                                "  list\n" +
+                                "    → Shows all tasks in your list.\n\n" +
+                                "  mark <task number>\n" +
+                                "    → Marks a task as done.\n\n" +
+                                "  unmark <task number>\n" +
+                                "    → Marks a task as not done.\n\n" +
+                                "  bye\n" +
+                                "    → Exits the program.\n" +
+                                DIVIDER);
                     }
                 }
             } catch (IllegalArgumentException e) {
