@@ -1,7 +1,11 @@
 package main.java;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Nova {
     private static final String DIVIDER = "____________________________________________________________\n";
@@ -12,6 +16,16 @@ public class Nova {
     }
 
     public static void main(String[] args) {
+        File tasksFile = new File("data/nova.txt");
+        // file handling
+        try {
+            tasksFile.getParentFile().mkdirs();
+            tasksFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create data file: " + tasksFile.getAbsolutePath(), e);
+        }
+        loadTasksFile(tasksFile);
+
         Scanner scanner = new Scanner(System.in);
         System.out.println(DIVIDER +
                 "Hello! I'm Nova :3\n" +
@@ -32,14 +46,36 @@ public class Nova {
                 Command command = Command.valueOf(commandStr);
 
                 switch (command) {
-                    case list -> handleList();
-                    case mark -> handleMark(parts);
-                    case unmark -> handleUnmark(parts);
-                    case todo -> handleTodo(parts);
-                    case deadline -> handleDeadline(parts);
-                    case event -> handleEvent(parts);
-                    case help -> handleHelp();
-                    case delete -> handleDelete(parts);
+                case list:
+                    handleList();
+                    break;
+                case mark:
+                    handleMark(parts);
+                    writeToTasksFile(tasksFile);
+                    break;
+                case unmark:
+                    handleUnmark(parts);
+                    writeToTasksFile(tasksFile);
+                    break;
+                case todo:
+                    handleTodo(parts);
+                    writeToTasksFile(tasksFile);
+                    break;
+                case deadline:
+                    handleDeadline(parts);
+                    writeToTasksFile(tasksFile);
+                    break;
+                case event:
+                    handleEvent(parts);
+                    writeToTasksFile(tasksFile);
+                    break;
+                case help:
+                    handleHelp();
+                    break;
+                case delete:
+                    handleDelete(parts);
+                    writeToTasksFile(tasksFile);
+                    break;
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println("OOPS!!! I'm sorry, but I don't know what that means :-(");
@@ -47,6 +83,55 @@ public class Nova {
         }
 
         System.out.println(DIVIDER + "Bye. Hope to see you again soon!\n" + DIVIDER);
+    }
+
+    private static void loadTasksFile(File file) {
+        try (Scanner fileScanner = new Scanner(file)) {
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine().trim();
+                if (line.isEmpty()) continue;
+
+                String[] parts = line.split(" \\| ");
+                String type = parts[0];
+                boolean isDone = parts[1].equals("1");
+                Task task = null;
+
+                switch (type) {
+                    case "T" -> task = new ToDo(parts[2]);
+                    case "D" -> task = new Deadline(parts[2], parts[3]);
+                    case "E" -> task = new Event(parts[2], parts[3], parts[4]);
+                }
+
+                if (task != null) {
+                    if (isDone) task.mark();
+                    listOfTasks.add(task);
+                }
+            }
+        } catch (IOException e){
+            System.err.println("Error reading tasks from file: " + file.getAbsolutePath());
+        }
+    }
+
+    private static void writeToTasksFile(File file) {
+        try (FileWriter writer = new FileWriter(file, false)) { // overwrite file
+            for (Task task : listOfTasks) {
+                String line = "";
+
+                if (task instanceof ToDo) {
+                    line = "T | " + (task.getStatus() ? "1" : "0") + " | " + task.getDescription();
+                } else if (task instanceof Deadline d) {
+                    line = "D | " + (task.getStatus() ? "1" : "0")
+                            + " | " + d.getDescription() + " | " + d.getBy();
+                } else if (task instanceof Event e) {
+                    line = "E | " + (task.getStatus() ? "1" : "0")
+                            + " | " + e.getDescription() + " | " + e.getFrom() + " | " + e.getTo();
+                }
+
+                writer.write(line + "\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing tasks to file: " + file.getAbsolutePath());
+        }
     }
 
     private static void handleList() {
