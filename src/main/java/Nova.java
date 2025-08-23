@@ -1,18 +1,21 @@
 package main.java;
 
-import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Nova {
     private static final String DIVIDER = "____________________________________________________________\n";
     private static final ArrayList<Task> listOfTasks = new ArrayList<>();
 
     private enum Command {
-        list, mark, unmark, bye, todo, deadline, event, help, delete
+        list, mark, unmark, bye, todo, deadline, event, help, delete, schedule
     }
 
     public static void main(String[] args) {
@@ -76,6 +79,9 @@ public class Nova {
                     handleDelete(parts);
                     writeToTasksFile(tasksFile);
                     break;
+                case schedule:
+                    handleSchedule(parts);
+                    break;
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println("OOPS!!! I'm sorry, but I don't know what that means :-(");
@@ -97,9 +103,22 @@ public class Nova {
                 Task task = null;
 
                 switch (type) {
-                    case "T" -> task = new ToDo(parts[2]);
-                    case "D" -> task = new Deadline(parts[2], parts[3]);
-                    case "E" -> task = new Event(parts[2], parts[3], parts[4]);
+                case "T":
+                    task = new ToDo(parts[2]);
+                    break;
+                case "D":
+                    LocalDateTime deadline = parseDateTime(parts[3]);
+                    if (deadline != null) {
+                        task = new Deadline(parts[2], deadline);
+                    }
+                    break;
+                case "E":
+                    LocalDateTime from = parseDateTime(parts[3]);
+                    LocalDateTime to = parseDateTime(parts[4]);
+                    if (from != null && to != null) {
+                        task = new Event(parts[2], from, to);
+                    }
+                    break;
                 }
 
                 if (task != null) {
@@ -203,7 +222,8 @@ public class Nova {
         }
         String[] remainder = parts[1].split(" /by ", 2);
         String description = remainder[0];
-        String deadline = remainder[1];
+        LocalDateTime deadline = parseDateTime(remainder[1]);
+        if (deadline == null) return;
         Task curr = new Deadline(description, deadline);
         listOfTasks.add(curr);
         System.out.println(DIVIDER + "Got it. I've added this task:\n  " + curr +
@@ -218,8 +238,9 @@ public class Nova {
         String[] remainder = parts[1].split(" /from ", 2);
         String description = remainder[0];
         String[] timings = remainder[1].split(" /to ", 2);
-        String from = timings[0];
-        String to = timings[1];
+        LocalDateTime from = parseDateTime(timings[0]);
+        LocalDateTime to = parseDateTime(timings[1]);
+        if (from == null || to == null) return;
         Task curr = new Event(description, from, to);
         listOfTasks.add(curr);
         System.out.println(DIVIDER + "Got it. I've added this task:\n  " + curr +
@@ -237,6 +258,8 @@ public class Nova {
                 "    → Adds an event with a time range. Example: event project meeting /from Mon 2pm /to 4pm\n\n" +
                 "  list\n" +
                 "    → Shows all tasks in your list.\n\n" +
+                "  schedule <date>\n" +
+                "    → Shows all tasks on that date.\n\n" +
                 "  mark <task number>\n" +
                 "    → Marks a task as done.\n\n" +
                 "  unmark <task number>\n" +
@@ -260,5 +283,75 @@ public class Nova {
         } else {
             System.out.println(DIVIDER + "Usage: delete <task number>\n" + DIVIDER);
         }
+    }
+
+    private static void handleSchedule(String[] parts) {
+        if (parts.length < 2 || parts[1].isBlank()) {
+            System.out.println(DIVIDER + "Usage: schedule <date>\nExample: schedule 2025-08-25\n" + DIVIDER);
+            return;
+        }
+
+        String dateStr = parts[1].trim();
+        LocalDateTime parsedDateTime = parseDateTime(dateStr);
+        if (parsedDateTime == null) {
+            return;
+        }
+
+        LocalDate queryDate = parsedDateTime.toLocalDate();
+        StringBuilder result = new StringBuilder();
+        for (Task task : listOfTasks) {
+            if (task instanceof Deadline d) {
+                if (d.getBy().toLocalDate().equals(queryDate)) {
+                    result.append(d).append("\n");
+                }
+            } else if (task instanceof Event e) {
+                LocalDate fromDate = e.getFrom().toLocalDate();
+                LocalDate toDate = e.getTo().toLocalDate();
+                if (!queryDate.isBefore(fromDate) && !queryDate.isAfter(toDate)) {
+                    result.append(e).append("\n");
+                }
+            }
+        }
+
+        if (result.isEmpty()) {
+            System.out.println(DIVIDER + "No deadlines or events found on " + queryDate + "\n" + DIVIDER);
+        } else {
+            System.out.println(DIVIDER + "Scheduled tasks on " + queryDate + ":\n" + result + DIVIDER);
+        }
+    }
+
+    private static LocalDateTime parseDateTime(String dateStr) {
+        // try date and time
+        try {
+            return LocalDateTime.parse(dateStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        } catch (DateTimeParseException ignored) {}
+
+        // try date only
+        try {
+            LocalDate date = LocalDate.parse(dateStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE);
+            return date.atStartOfDay();
+        } catch (DateTimeParseException ignored) {}
+
+        DateTimeFormatter[] customFormats = {
+                DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
+                DateTimeFormatter.ofPattern("d/M/yyyy"),
+                DateTimeFormatter.ofPattern("d MMM yyyy HHmm"),
+                DateTimeFormatter.ofPattern("d MMM yyyy"),
+                DateTimeFormatter.ofPattern("MMM d yyyy HHmm"),
+                DateTimeFormatter.ofPattern("MMM d yyyy"),
+        };
+        for (DateTimeFormatter fmt : customFormats) {
+            try {
+                return LocalDateTime.parse(dateStr.trim(), fmt);
+            } catch (DateTimeParseException ignored) {
+                try {
+                    LocalDate date = LocalDate.parse(dateStr.trim(), fmt);
+                    return date.atStartOfDay();
+                } catch (DateTimeParseException ignored2) {}
+            }
+        }
+        System.out.println(DIVIDER + "\nInvalid date format: " + dateStr
+                + "\nTry something like Dec 31 2025 or 31/12/2025!\n" + DIVIDER);
+        return null;
     }
 }
