@@ -1,4 +1,5 @@
-package main.java;
+import tasks.*;
+import storage.Storage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,23 +13,23 @@ import java.time.format.DateTimeParseException;
 
 public class Nova {
     private static final String DIVIDER = "____________________________________________________________\n";
-    private static final ArrayList<Task> listOfTasks = new ArrayList<>();
+    private TaskList tasks;
+    private final Storage storage;
 
     private enum Command {
         list, mark, unmark, bye, todo, deadline, event, help, delete, schedule
     }
 
+    public Nova(String filePath) {
+        this.storage = new Storage(filePath);
+        TaskList loaded = storage.load();
+        this.tasks = (loaded != null) ? loaded : new TaskList();
+    }
     public static void main(String[] args) {
-        File tasksFile = new File("data/nova.txt");
-        // file handling
-        try {
-            tasksFile.getParentFile().mkdirs();
-            tasksFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create data file: " + tasksFile.getAbsolutePath(), e);
-        }
-        loadTasksFile(tasksFile);
+        new Nova("data/tasks.txt").run();
+    }
 
+    public void run() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(DIVIDER +
                 "Hello! I'm Nova :3\n" +
@@ -54,30 +55,30 @@ public class Nova {
                     break;
                 case mark:
                     handleMark(parts);
-                    writeToTasksFile(tasksFile);
+                    this.storage.write(tasks);
                     break;
                 case unmark:
                     handleUnmark(parts);
-                    writeToTasksFile(tasksFile);
+                    this.storage.write(tasks);
                     break;
                 case todo:
                     handleTodo(parts);
-                    writeToTasksFile(tasksFile);
+                    this.storage.write(tasks);
                     break;
                 case deadline:
                     handleDeadline(parts);
-                    writeToTasksFile(tasksFile);
+                    this.storage.write(tasks);
                     break;
                 case event:
                     handleEvent(parts);
-                    writeToTasksFile(tasksFile);
+                    this.storage.write(tasks);
                     break;
                 case help:
                     handleHelp();
                     break;
                 case delete:
                     handleDelete(parts);
-                    writeToTasksFile(tasksFile);
+                    this.storage.write(tasks);
                     break;
                 case schedule:
                     handleSchedule(parts);
@@ -91,85 +92,23 @@ public class Nova {
         System.out.println(DIVIDER + "Bye. Hope to see you again soon!\n" + DIVIDER);
     }
 
-    private static void loadTasksFile(File file) {
-        try (Scanner fileScanner = new Scanner(file)) {
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine().trim();
-                if (line.isEmpty()) continue;
-
-                String[] parts = line.split(" \\| ");
-                String type = parts[0];
-                boolean isDone = parts[1].equals("1");
-                Task task = null;
-
-                switch (type) {
-                case "T":
-                    task = new ToDo(parts[2]);
-                    break;
-                case "D":
-                    LocalDateTime deadline = parseDateTime(parts[3]);
-                    if (deadline != null) {
-                        task = new Deadline(parts[2], deadline);
-                    }
-                    break;
-                case "E":
-                    LocalDateTime from = parseDateTime(parts[3]);
-                    LocalDateTime to = parseDateTime(parts[4]);
-                    if (from != null && to != null) {
-                        task = new Event(parts[2], from, to);
-                    }
-                    break;
-                }
-
-                if (task != null) {
-                    if (isDone) task.mark();
-                    listOfTasks.add(task);
-                }
-            }
-        } catch (IOException e){
-            System.err.println("Error reading tasks from file: " + file.getAbsolutePath());
-        }
-    }
-
-    private static void writeToTasksFile(File file) {
-        try (FileWriter writer = new FileWriter(file, false)) { // overwrite file
-            for (Task task : listOfTasks) {
-                String line = "";
-
-                if (task instanceof ToDo) {
-                    line = "T | " + (task.getStatus() ? "1" : "0") + " | " + task.getDescription();
-                } else if (task instanceof Deadline d) {
-                    line = "D | " + (task.getStatus() ? "1" : "0")
-                            + " | " + d.getDescription() + " | " + d.getBy();
-                } else if (task instanceof Event e) {
-                    line = "E | " + (task.getStatus() ? "1" : "0")
-                            + " | " + e.getDescription() + " | " + e.getFrom() + " | " + e.getTo();
-                }
-
-                writer.write(line + "\n");
-            }
-        } catch (IOException e) {
-            System.err.println("Error writing tasks to file: " + file.getAbsolutePath());
-        }
-    }
-
-    private static void handleList() {
-        if (listOfTasks.isEmpty()) {
+    private void handleList() {
+        if (tasks.isEmpty()) {
             System.out.println(DIVIDER + "There are no tasks! Try \"help\" for commands!\n" + DIVIDER);
             return;
         }
         StringBuilder taskString = new StringBuilder();
-        for (int i = 0; i < listOfTasks.size(); i++) {
-            taskString.append("  ").append(i + 1).append(".").append(listOfTasks.get(i)).append("\n");
+        for (int i = 0; i < tasks.size(); i++) {
+            taskString.append("  ").append(i + 1).append(".").append(tasks.get(i)).append("\n");
         }
         System.out.println(DIVIDER + "Here are the tasks in your list:\n" + taskString + DIVIDER);
     }
 
-    private static void handleMark(String[] parts) {
+    private void handleMark(String[] parts) {
         if (parts.length == 2 && parts[1].matches("\\d+")) {
             int index = Integer.parseInt(parts[1]) - 1;
-            if (index >= 0 && index < listOfTasks.size()) {
-                Task curr = listOfTasks.get(index);
+            if (index >= 0 && index < tasks.size()) {
+                Task curr = tasks.get(index);
                 if (!curr.getStatus()) {
                     curr.mark();
                     System.out.println(DIVIDER + "Nice! I've marked this task as done:\n  " + curr + "\n" + DIVIDER);
@@ -184,11 +123,11 @@ public class Nova {
         }
     }
 
-    private static void handleUnmark(String[] parts) {
+    private void handleUnmark(String[] parts) {
         if (parts.length == 2 && parts[1].matches("\\d+")) {
             int index = Integer.parseInt(parts[1]) - 1;
-            if (index >= 0 && index < listOfTasks.size()) {
-                Task curr = listOfTasks.get(index);
+            if (index >= 0 && index < tasks.size()) {
+                Task curr = tasks.get(index);
                 if (curr.getStatus()) {
                     curr.unmark();
                     System.out.println(DIVIDER + "OK, I've marked this task as not done yet:\n  " + curr + "\n" + DIVIDER);
@@ -203,19 +142,19 @@ public class Nova {
         }
     }
 
-    private static void handleTodo(String[] parts) {
+    private void handleTodo(String[] parts) {
         if (parts.length < 2 || parts[1].isBlank()) {
             System.out.println(DIVIDER + "Usage: todo <description>\n" + DIVIDER);
             return;
         }
         String description = parts[1];
         Task curr = new ToDo(description);
-        listOfTasks.add(curr);
+        tasks.add(curr);
         System.out.println(DIVIDER + "Got it. I've added this task:\n  " + curr +
-                "\nNow you have " + listOfTasks.size() + " tasks in the list.\n" + DIVIDER);
+                "\nNow you have " + tasks.size() + " tasks in the list.\n" + DIVIDER);
     }
 
-    private static void handleDeadline(String[] parts) {
+    private void handleDeadline(String[] parts) {
         if (parts.length < 2 || !parts[1].contains(" /by ")) {
             System.out.println(DIVIDER + "Usage: deadline <description> /by <deadline>\n" + DIVIDER);
             return;
@@ -225,12 +164,12 @@ public class Nova {
         LocalDateTime deadline = parseDateTime(remainder[1]);
         if (deadline == null) return;
         Task curr = new Deadline(description, deadline);
-        listOfTasks.add(curr);
+        tasks.add(curr);
         System.out.println(DIVIDER + "Got it. I've added this task:\n  " + curr +
-                "\nNow you have " + listOfTasks.size() + " tasks in the list.\n" + DIVIDER);
+                "\nNow you have " + tasks.size() + " tasks in the list.\n" + DIVIDER);
     }
 
-    private static void handleEvent(String[] parts) {
+    private void handleEvent(String[] parts) {
         if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to ")) {
             System.out.println(DIVIDER + "Usage: event <description> /from <start> /to <end>\n" + DIVIDER);
             return;
@@ -242,12 +181,12 @@ public class Nova {
         LocalDateTime to = parseDateTime(timings[1]);
         if (from == null || to == null) return;
         Task curr = new Event(description, from, to);
-        listOfTasks.add(curr);
+        tasks.add(curr);
         System.out.println(DIVIDER + "Got it. I've added this task:\n  " + curr +
-                "\nNow you have " + listOfTasks.size() + " tasks in the list.\n" + DIVIDER);
+                "\nNow you have " + tasks.size() + " tasks in the list.\n" + DIVIDER);
     }
 
-    private static void handleHelp() {
+    private void handleHelp() {
         System.out.println(DIVIDER +
                 "Here are the available commands:\n" +
                 "  todo <description>\n" +
@@ -269,14 +208,14 @@ public class Nova {
                 DIVIDER);
     }
 
-    private static void handleDelete(String[] parts) {
+    private void handleDelete(String[] parts) {
         if (parts.length == 2 && parts[1].matches("\\d+")) {
             int index = Integer.parseInt(parts[1]) - 1;
-            if (index >= 0 && index < listOfTasks.size()) {
-                Task curr = listOfTasks.get(index);
-                listOfTasks.remove(index);
+            if (index >= 0 && index < tasks.size()) {
+                Task curr = tasks.get(index);
+                tasks.remove(index);
                 System.out.println(DIVIDER + "Noted. I've removed this task:\n  " + curr +
-                        "\nNow you have " + listOfTasks.size() + " tasks in the list.\n" + DIVIDER);
+                        "\nNow you have " + tasks.size() + " tasks in the list.\n" + DIVIDER);
             } else {
                 System.out.println(DIVIDER + "Invalid task number!\n" + DIVIDER);
             }
@@ -285,7 +224,7 @@ public class Nova {
         }
     }
 
-    private static void handleSchedule(String[] parts) {
+    private void handleSchedule(String[] parts) {
         if (parts.length < 2 || parts[1].isBlank()) {
             System.out.println(DIVIDER + "Usage: schedule <date>\nExample: schedule 2025-08-25\n" + DIVIDER);
             return;
@@ -299,7 +238,7 @@ public class Nova {
 
         LocalDate queryDate = parsedDateTime.toLocalDate();
         StringBuilder result = new StringBuilder();
-        for (Task task : listOfTasks) {
+        for (Task task : tasks) {
             if (task instanceof Deadline d) {
                 if (d.getBy().toLocalDate().equals(queryDate)) {
                     result.append(d).append("\n");
