@@ -23,9 +23,7 @@ public class Ui {
     }
 
     public void showLoadingError() {
-        System.out.println(DIVIDER +
-                "Loading failed... \n" +
-                DIVIDER);
+        System.out.println(DIVIDER + "Loading failed...\n" + DIVIDER);
     }
 
     public String readCommand() {
@@ -33,8 +31,10 @@ public class Ui {
     }
 
     public void showError(String msg) {
-        System.out.println(DIVIDER +
-                "Error: " + msg + "\n" +
-                DIVIDER);
+        System.out.println("Error: " + msg);
+    }
+
+    public void showText(String msg) {
+        System.out.println(msg);
     }
 }
