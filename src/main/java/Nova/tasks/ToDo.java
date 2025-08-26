@@ -1,4 +1,4 @@
-package main.java;
+package Nova.tasks;
 
 public class ToDo extends Task {
 

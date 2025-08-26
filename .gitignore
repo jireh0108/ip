@@ -19,4 +19,4 @@ text-ui-test/input.txt
 text-ui-test/EXPECTED-UNIX.TXT
 
 .class
-/data/nova.txt
+/data/tasks.txt

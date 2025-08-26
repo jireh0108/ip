@@ -1,16 +1,17 @@
 todo borrow book
 list
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by Dec 31 2025
+event project meeting /from Dec 30 2025 /to Dec 31 2025
 mark 1
 list
 deadline
+todo
+event
 todo read book
 todo buy bread
-mark 4
-mark 5
-list
-unmark 5
-list
-delete 4
-list
+delete 1
+delete 1
+delete 1
+delete 1
+delete 1
+bye
