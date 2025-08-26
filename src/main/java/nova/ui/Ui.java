@@ -3,7 +3,7 @@ package nova.ui;
 import java.util.Scanner;
 
 public class Ui {
-    protected String DIVIDER = "____________________________________________________________\n";
+    protected String DIVIDER = "____________________________________________________________";
     Scanner scanner;
 
     public Ui() {
@@ -16,7 +16,7 @@ public class Ui {
 
     public void showWelcome() {
         System.out.println(DIVIDER +
-                "Hello! I'm nova :3\n" +
+                "\nHello! I'm Nova :3\n" +
                 "What can I do for you?\n" +
                 "Enter \"help\" to see available commands!\n" +
                 DIVIDER);

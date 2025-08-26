@@ -1,0 +1,67 @@
+package nova.ui;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class UiTest {
+    private Ui ui;
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+
+    @BeforeEach
+    void setUp() {
+        ui = new Ui();
+        System.setOut(new PrintStream(outContent));
+    }
+
+    @Test
+    void testShowLine() {
+        ui.showLine();
+        String expected = "____________________________________________________________" + System.lineSeparator();
+        assertEquals(expected, outContent.toString());
+    }
+
+    @Test
+    void testShowWelcome() {
+        ui.showWelcome();
+        String output = outContent.toString();
+        assertTrue(output.contains("Hello! I'm Nova :3"), "Welcome message should be displayed");
+        assertTrue(output.contains("Enter \"help\" to see available commands!"), "Help instructions should be displayed");
+    }
+
+    @Test
+    void testShowLoadingError() {
+        ui.showLoadingError();
+        String output = outContent.toString();
+        assertTrue(output.contains("Loading failed..."), "Loading error message should be displayed");
+    }
+
+    @Test
+    void testShowError() {
+        ui.showError("Something went wrong");
+        String output = outContent.toString();
+        assertTrue(output.contains("Error: Something went wrong"), "Error message should include prefix");
+    }
+
+    @Test
+    void testShowText() {
+        ui.showText("Hello world");
+        String output = outContent.toString();
+        assertTrue(output.contains("Hello world"), "showText() should print the message");
+    }
+
+    @Test
+    void testReadCommand() {
+        String simulatedInput = "test command\n";
+        ui = new Ui();
+        ui.scanner = new java.util.Scanner(new ByteArrayInputStream(simulatedInput.getBytes()));
+        String input = ui.readCommand();
+        assertEquals("test command", input, "readCommand() should return user input");
+    }
+}

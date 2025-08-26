@@ -11,11 +11,7 @@ public class ListCommand extends Command {
             ui.showText("There are no tasks! Try \"help\" for commands!");
             return;
         }
-        StringBuilder taskString = new StringBuilder();
-        for (int i = 0; i < tasks.size(); i++) {
-            taskString.append("  ").append(i + 1).append(".").append(tasks.get(i)).append("\n");
-        }
-        ui.showText("Here are the tasks in your list:" + taskString);
+        ui.showText("Here are the tasks in your list:\n" + tasks);
     }
 
     @Override

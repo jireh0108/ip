@@ -40,7 +40,14 @@ public class TaskList implements Iterable<Task>{
 
     @Override
     public String toString() {
-        return this.tasks.toString();
+        StringBuilder taskString = new StringBuilder();
+        for (int i = 0; i < tasks.size(); i++) {
+            taskString.append("  ").append(i + 1).append(".").append(tasks.get(i));
+            if (i < tasks.size() - 1) {
+                taskString.append("\n");
+            }
+        }
+        return taskString.toString();
     }
 
     @Override

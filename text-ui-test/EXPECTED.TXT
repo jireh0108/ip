@@ -1,122 +1,87 @@
 ____________________________________________________________
-Hello! I'm nova :3
+Hello! I'm Nova :3
 What can I do for you?
 Enter "help" to see available commands!
 ____________________________________________________________
-
 ____________________________________________________________
-
 Got it. I've added this task:
   [T][ ] borrow book
 Now you have 1 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
-Here are the tasks in your list:  1.[T][ ] borrow book
-
+Here are the tasks in your list:
+  1.[T][ ] borrow book
 ____________________________________________________________
-
 ____________________________________________________________
-
 Got it. I've added this task:
   [D][ ] return book (by: Dec 31 2025 0000)
 Now you have 2 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Got it. I've added this task:
   [E][ ] project meeting (from: Dec 30 2025 0000 to: Dec 31 2025 0000)
 Now you have 3 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Nice! I've marked this task as done:
   [T][X] borrow book
 ____________________________________________________________
-
 ____________________________________________________________
-
-Here are the tasks in your list:  1.[T][X] borrow book
+Here are the tasks in your list:
+  1.[T][X] borrow book
   2.[D][ ] return book (by: Dec 31 2025 0000)
   3.[E][ ] project meeting (from: Dec 30 2025 0000 to: Dec 31 2025 0000)
-
 ____________________________________________________________
-
 ____________________________________________________________
-
 Error: Incorrect command usage... nova doesn't know what to do...
 Make sure this is the format!
 Usage: deadline <description> /by <date>
 ____________________________________________________________
-
 ____________________________________________________________
-
 Error: Incorrect command usage... nova doesn't know what to do...
 Make sure this is the format!
 Usage: todo <description>
 ____________________________________________________________
-
 ____________________________________________________________
-
 Error: Incorrect command usage... nova doesn't know what to do...
 Make sure this is the format!
 Usage: event <description> /from <date> /to <date>
 ____________________________________________________________
-
 ____________________________________________________________
-
 Got it. I've added this task:
   [T][ ] read book
 Now you have 4 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Got it. I've added this task:
   [T][ ] buy bread
 Now you have 5 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Noted. I've removed this task:
   [T][X] borrow book
 Now you have 4 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Noted. I've removed this task:
   [D][ ] return book (by: Dec 31 2025 0000)
 Now you have 3 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Noted. I've removed this task:
   [E][ ] project meeting (from: Dec 30 2025 0000 to: Dec 31 2025 0000)
 Now you have 2 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Noted. I've removed this task:
   [T][ ] read book
 Now you have 1 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Noted. I've removed this task:
   [T][ ] buy bread
 Now you have 0 tasks in the list.
 ____________________________________________________________
-
 ____________________________________________________________
-
 Bye! Hope to see you again soon!
 ____________________________________________________________
-
