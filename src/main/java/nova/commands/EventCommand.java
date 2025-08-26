@@ -1,11 +1,11 @@
-package Nova.commands;
+package nova.commands;
 
-import Nova.storage.Storage;
-import Nova.parser.Parser;
-import Nova.tasks.Event;
-import Nova.tasks.TaskList;
-import Nova.tasks.Task;
-import Nova.ui.Ui;
+import nova.storage.Storage;
+import nova.parser.Parser;
+import nova.tasks.Event;
+import nova.tasks.TaskList;
+import nova.tasks.Task;
+import nova.ui.Ui;
 import java.time.LocalDateTime;
 
 public class EventCommand extends Command {

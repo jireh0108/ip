@@ -1,5 +1,5 @@
 ____________________________________________________________
-Hello! I'm Nova :3
+Hello! I'm nova :3
 What can I do for you?
 Enter "help" to see available commands!
 ____________________________________________________________
@@ -47,21 +47,21 @@ ____________________________________________________________
 
 ____________________________________________________________
 
-Error: Incorrect command usage... Nova doesn't know what to do...
+Error: Incorrect command usage... nova doesn't know what to do...
 Make sure this is the format!
 Usage: deadline <description> /by <date>
 ____________________________________________________________
 
 ____________________________________________________________
 
-Error: Incorrect command usage... Nova doesn't know what to do...
+Error: Incorrect command usage... nova doesn't know what to do...
 Make sure this is the format!
 Usage: todo <description>
 ____________________________________________________________
 
 ____________________________________________________________
 
-Error: Incorrect command usage... Nova doesn't know what to do...
+Error: Incorrect command usage... nova doesn't know what to do...
 Make sure this is the format!
 Usage: event <description> /from <date> /to <date>
 ____________________________________________________________

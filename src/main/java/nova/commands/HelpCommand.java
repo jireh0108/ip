@@ -1,7 +1,7 @@
-package Nova.commands;
-import Nova.storage.Storage;
-import Nova.tasks.TaskList;
-import Nova.ui.Ui;
+package nova.commands;
+import nova.storage.Storage;
+import nova.tasks.TaskList;
+import nova.ui.Ui;
 
 public class HelpCommand extends Command {
     @Override

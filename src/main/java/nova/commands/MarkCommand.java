@@ -1,9 +1,9 @@
-package Nova.commands;
+package nova.commands;
 
-import Nova.tasks.Task;
-import Nova.tasks.TaskList;
-import Nova.storage.Storage;
-import Nova.ui.Ui;
+import nova.tasks.Task;
+import nova.tasks.TaskList;
+import nova.storage.Storage;
+import nova.ui.Ui;
 
 public class MarkCommand extends Command {
     private final int index;

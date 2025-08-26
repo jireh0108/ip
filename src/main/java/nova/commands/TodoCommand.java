@@ -1,10 +1,10 @@
-package Nova.commands;
+package nova.commands;
 
-import Nova.storage.Storage;
-import Nova.tasks.Task;
-import Nova.tasks.TaskList;
-import Nova.tasks.ToDo;
-import Nova.ui.Ui;
+import nova.storage.Storage;
+import nova.tasks.Task;
+import nova.tasks.TaskList;
+import nova.tasks.ToDo;
+import nova.ui.Ui;
 
 public class TodoCommand extends Command {
     private final String description;

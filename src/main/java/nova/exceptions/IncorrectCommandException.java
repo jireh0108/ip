@@ -1,10 +1,10 @@
-package Nova.exceptions;
+package nova.exceptions;
 
-import Nova.commands.Command;
+import nova.commands.Command;
 
 public class IncorrectCommandException extends NovaException {
     public IncorrectCommandException(Command c) {
-        super("Incorrect command usage... Nova doesn't know what to do...\n"
+        super("Incorrect command usage... nova doesn't know what to do...\n"
                 + "Make sure this is the format!\n" + "Usage: " + c.getFormat());
     }
 }

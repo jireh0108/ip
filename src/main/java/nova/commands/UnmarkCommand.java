@@ -1,9 +1,9 @@
-package Nova.commands;
+package nova.commands;
 
-import Nova.storage.Storage;
-import Nova.tasks.Task;
-import Nova.tasks.TaskList;
-import Nova.ui.Ui;
+import nova.storage.Storage;
+import nova.tasks.Task;
+import nova.tasks.TaskList;
+import nova.ui.Ui;
 
 public class UnmarkCommand extends Command {
     private final int index;

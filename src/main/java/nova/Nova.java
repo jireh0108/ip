@@ -1,11 +1,11 @@
-package Nova;
+package nova;
 
-import Nova.exceptions.NovaException;
-import Nova.parser.Parser;
-import Nova.tasks.*;
-import Nova.commands.Command;
-import Nova.storage.Storage;
-import Nova.ui.Ui;
+import nova.exceptions.NovaException;
+import nova.parser.Parser;
+import nova.tasks.*;
+import nova.commands.Command;
+import nova.storage.Storage;
+import nova.ui.Ui;
 
 public class Nova {
     private TaskList tasks;

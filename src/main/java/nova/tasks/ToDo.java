@@ -1,4 +1,4 @@
-package Nova.tasks;
+package nova.tasks;
 
 public class ToDo extends Task {
 

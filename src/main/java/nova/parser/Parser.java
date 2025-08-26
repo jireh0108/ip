@@ -1,7 +1,7 @@
-package Nova.parser;
+package nova.parser;
 
-import Nova.commands.*;
-import Nova.exceptions.*;
+import nova.commands.*;
+import nova.exceptions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package Nova.exceptions;
+package nova.exceptions;
 
 public class IncorrectDateException extends NovaException {
     public IncorrectDateException() {

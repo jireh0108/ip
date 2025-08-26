@@ -17,7 +17,7 @@ IF ERRORLEVEL 1 (
 )
 
 REM run the program
-java -classpath ..\bin Nova.Nova < input.txt > ACTUAL.TXT
+java -classpath ..\bin nova.Nova < input.txt > ACTUAL.TXT
 
 REM compare the output to the expected output
 FC ACTUAL.TXT EXPECTED.TXT
