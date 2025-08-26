@@ -1,13 +1,12 @@
-import tasks.*;
-import storage.Storage;
+package Nova;
+
+import Nova.parser.Parser;
+import Nova.tasks.*;
+import Nova.storage.Storage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -43,8 +42,7 @@ public class Nova {
                 break;
             }
 
-            String[] parts = line.split(" ", 2);
-            String commandStr = parts[0];
+            String commandStr = Parser.parse(line);
 
             try {
                 Command command = Command.valueOf(commandStr);
@@ -54,34 +52,34 @@ public class Nova {
                     handleList();
                     break;
                 case mark:
-                    handleMark(parts);
+                    handleMark(line.split(" ", 2));
                     this.storage.write(tasks);
                     break;
                 case unmark:
-                    handleUnmark(parts);
+                    handleUnmark(line.split(" ", 2));
                     this.storage.write(tasks);
                     break;
                 case todo:
-                    handleTodo(parts);
+                    handleTodo(line.split(" ", 2));
                     this.storage.write(tasks);
                     break;
                 case deadline:
-                    handleDeadline(parts);
+                    handleDeadline(line.split(" ", 2));
                     this.storage.write(tasks);
                     break;
                 case event:
-                    handleEvent(parts);
+                    handleEvent(line.split(" ", 2));
                     this.storage.write(tasks);
                     break;
                 case help:
                     handleHelp();
                     break;
                 case delete:
-                    handleDelete(parts);
+                    handleDelete(line.split(" ", 2));
                     this.storage.write(tasks);
                     break;
                 case schedule:
-                    handleSchedule(parts);
+                    handleSchedule(line.split(" ", 2));
                     break;
                 }
             } catch (IllegalArgumentException e) {

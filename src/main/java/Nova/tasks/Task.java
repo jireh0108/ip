@@ -1,4 +1,4 @@
-package tasks;
+package Nova.tasks;
 
 public class Task {
     protected String description;
