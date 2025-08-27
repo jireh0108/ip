@@ -5,17 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import nova.commands.Command;
-import nova.commands.DeadlineCommand;
-import nova.commands.DeleteCommand;
-import nova.commands.EventCommand;
-import nova.commands.ExitCommand;
-import nova.commands.HelpCommand;
-import nova.commands.ListCommand;
-import nova.commands.MarkCommand;
-import nova.commands.ScheduleCommand;
-import nova.commands.TodoCommand;
-import nova.commands.UnmarkCommand;
+import nova.commands.*;
 import nova.exceptions.IncorrectCommandException;
 import nova.exceptions.IncorrectDateException;
 import nova.exceptions.NovaException;
@@ -81,6 +71,12 @@ public class Parser {
                 throw new IncorrectCommandException(new ScheduleCommand(""));
             }
             return new ScheduleCommand(parts[1]);
+
+        case "find":
+            if (parts.length < 2 || parts[1].isBlank()) {
+                throw new IncorrectCommandException(new FindCommand(""));
+            }
+            return new FindCommand(parts[1]);
 
         case "help":
             return new HelpCommand();

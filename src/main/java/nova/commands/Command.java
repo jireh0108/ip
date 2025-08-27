@@ -5,6 +5,7 @@ import nova.tasks.TaskList;
 import nova.ui.Ui;
 
 public abstract class Command {
+    public Command() {}
     /**
      * Executes specific functions of the child classes.
      *
