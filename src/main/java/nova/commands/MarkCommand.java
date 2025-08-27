@@ -1,8 +1,8 @@
 package nova.commands;
 
+import nova.storage.Storage;
 import nova.tasks.Task;
 import nova.tasks.TaskList;
-import nova.storage.Storage;
 import nova.ui.Ui;
 
 public class MarkCommand extends Command {

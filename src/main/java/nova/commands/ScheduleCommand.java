@@ -1,5 +1,8 @@
 package nova.commands;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import nova.parser.Parser;
 import nova.storage.Storage;
 import nova.tasks.Deadline;
@@ -7,8 +10,6 @@ import nova.tasks.Event;
 import nova.tasks.Task;
 import nova.tasks.TaskList;
 import nova.ui.Ui;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class ScheduleCommand extends Command {
     private final String dateStr;

@@ -3,7 +3,7 @@ package nova.tasks;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TaskList implements Iterable<Task>{
+public class TaskList implements Iterable<Task> {
     protected ArrayList<Task> tasks;
 
     public TaskList(ArrayList<Task> tasks) {
