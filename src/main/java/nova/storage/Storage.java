@@ -1,20 +1,17 @@
 package nova.storage;
 
+import nova.exceptions.IncorrectDateException;
 import nova.tasks.*;
-
+import static nova.parser.Parser.parseDateTime;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Storage {
-    private final File tasksFile;
-    private TaskList tasks;
-    private static final String DIVIDER = "____________________________________________________________\n";
+    /** File to be read and written to */
+    private final File tasksFile;;
 
     public Storage(String filePath) {
         this.tasksFile = new File(filePath);
@@ -27,7 +24,11 @@ public class Storage {
             throw new RuntimeException("Failed to create data file: " + tasksFile.getAbsolutePath(), e);
         }
     }
-
+    /**
+     * Reads Strings from a .txt file as Tasks and returns a TaskList object.
+     *
+     * @return TaskList object.
+     */
     public TaskList load() {
         TaskList loadedTasks = new TaskList();
         try (Scanner fileScanner = new Scanner(tasksFile)) {
@@ -66,7 +67,11 @@ public class Storage {
 
         return loadedTasks;
     }
-
+    /**
+     * Reads Tasks from a TaskList object and writes them as Strings to the Storage object's taskFile.
+     *
+     * @param tasks TaskList object.
+     */
     public void write(TaskList tasks) {
         try (FileWriter writer = new FileWriter(tasksFile, false)) { // overwrite
             for (Task task : tasks) {
@@ -83,40 +88,5 @@ public class Storage {
         } catch (IOException e) {
             System.err.println("Error writing tasks to file: " + tasksFile.getAbsolutePath());
         }
-    }
-
-    private static LocalDateTime parseDateTime(String dateStr) {
-        // try date and time
-        try {
-            return LocalDateTime.parse(dateStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        } catch (DateTimeParseException ignored) {}
-
-        // try date only
-        try {
-            LocalDate date = LocalDate.parse(dateStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE);
-            return date.atStartOfDay();
-        } catch (DateTimeParseException ignored) {}
-
-        DateTimeFormatter[] customFormats = {
-                DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
-                DateTimeFormatter.ofPattern("d/M/yyyy"),
-                DateTimeFormatter.ofPattern("d MMM yyyy HHmm"),
-                DateTimeFormatter.ofPattern("d MMM yyyy"),
-                DateTimeFormatter.ofPattern("MMM d yyyy HHmm"),
-                DateTimeFormatter.ofPattern("MMM d yyyy"),
-        };
-        for (DateTimeFormatter fmt : customFormats) {
-            try {
-                return LocalDateTime.parse(dateStr.trim(), fmt);
-            } catch (DateTimeParseException ignored) {
-                try {
-                    LocalDate date = LocalDate.parse(dateStr.trim(), fmt);
-                    return date.atStartOfDay();
-                } catch (DateTimeParseException ignored2) {}
-            }
-        }
-        System.out.println(DIVIDER + "\nInvalid date format: " + dateStr
-                + "\nTry something like Dec 31 2025 or 31/12/2025!\n" + DIVIDER);
-        return null;
     }
 }
