@@ -1,15 +1,15 @@
 package nova;
 
+import nova.commands.Command;
 import nova.exceptions.NovaException;
 import nova.parser.Parser;
-import nova.tasks.*;
-import nova.commands.Command;
 import nova.storage.Storage;
+import nova.tasks.TaskList;
 import nova.ui.Ui;
 
 public class Nova {
-    private TaskList tasks;
     private final Storage storage;
+    private TaskList tasks;
     private Ui ui;
 
     public Nova(String filePath) {
@@ -24,6 +24,7 @@ public class Nova {
         }
 
     }
+
     public static void main(String[] args) {
         new Nova("data/tasks.txt").run();
     }
