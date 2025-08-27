@@ -9,7 +9,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Parser {
-
+    /**
+     * Parses through user's input to either return a Command or throw an error for unreadable input.
+     *
+     * @param line User's input.
+     * @return Command based on user's input.
+     * @throws NovaException if user's input is unreadable.
+     */
     public static Command parse(String line) throws NovaException {
         String[] parts = line.trim().split(" ", 2);
         String commandWord = parts[0].toLowerCase();
@@ -73,7 +79,14 @@ public class Parser {
                 throw new UnknownCommandException();
         }
     }
-
+    /**
+     * Parses through user's input of date/time to either return
+     * a LocalDateTime object or throw an error for unreadable input.
+     *
+     * @param dateStr User's input for date/time.
+     * @return LocalDateTime object.
+     * @throws IncorrectDateException if user's input is unreadable.
+     */
     public static LocalDateTime parseDateTime(String dateStr) throws IncorrectDateException {
         // try ISO date and time
         try {
