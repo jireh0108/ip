@@ -1,5 +1,7 @@
 package nova.tasks;
-
+/**
+ * Represents a task to be completed by the user.
+ */
 public class Task {
     /**
      * Description of the task as a String
@@ -9,7 +11,9 @@ public class Task {
      * Status of completion of the task
      */
     protected boolean isDone;
-
+    /**
+     * Description of the task
+     */
     public Task(String description) {
         this.description = description;
         this.isDone = false;

@@ -33,7 +33,8 @@ class UiTest {
         ui.showWelcome();
         String output = outContent.toString();
         assertTrue(output.contains("Hello! I'm Nova :3"), "Welcome message should be displayed");
-        assertTrue(output.contains("Enter \"help\" to see available commands!"), "Help instructions should be displayed");
+        assertTrue(output.contains("Enter \"help\" to see available commands!"),
+                "Help instructions should be displayed");
     }
 
     @Test

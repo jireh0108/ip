@@ -17,7 +17,7 @@ class EventTest {
     @BeforeEach
     void setUp() {
         from = LocalDateTime.of(2025, 8, 27, 14, 0); // Aug 27 2025, 14:00
-        to = LocalDateTime.of(2025, 8, 27, 16, 30);  // Aug 27 2025, 16:30
+        to = LocalDateTime.of(2025, 8, 27, 16, 30); // Aug 27 2025, 16:30
         event = new Event("project meeting", from, to);
     }
 

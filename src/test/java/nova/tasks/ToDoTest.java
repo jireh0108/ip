@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 public class ToDoTest {
     @Test
-    public void ToDoFormatTest() {
+    public void toDoFormatTest() {
         ToDo task = new ToDo("buy bread");
-        assertEquals(task.toString(), "[T][ ] buy bread");
+        assertEquals("[T][ ] buy bread", task.toString());
     }
 }
