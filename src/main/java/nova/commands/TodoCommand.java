@@ -39,12 +39,12 @@ public class TodoCommand extends Command {
      * @param storage The {@link Storage} instance for persisting the updated task list.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         Task curr = new ToDo(description);
         tasks.add(curr);
         storage.write(tasks);
-        ui.showText("Got it. I've added this task:\n  " + curr
-                + "\nNow you have " + tasks.size() + " tasks in the list.");
+        return "Got it. I've added this task:\n  " + curr
+                + "\nNow you have " + tasks.size() + " tasks in the list.";
     }
 
     /**

@@ -43,10 +43,10 @@ public class ScheduleCommand extends Command {
      * @param storage The {@link Storage} instance (not used in this command).
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         LocalDateTime parsedDateTime = Parser.parseDateTime(dateStr);
         if (parsedDateTime == null) {
-            return;
+            return "";
         }
 
         LocalDate queryDate = parsedDateTime.toLocalDate();
@@ -67,9 +67,9 @@ public class ScheduleCommand extends Command {
         }
 
         if (result.isEmpty()) {
-            ui.showText("No deadlines or events found on " + queryDate);
+            return "No deadlines or events found on " + queryDate;
         } else {
-            ui.showText("Scheduled tasks on " + queryDate + ":\n" + result);
+            return "Scheduled tasks on " + queryDate + ":\n" + result;
         }
     }
 

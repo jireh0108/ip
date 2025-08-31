@@ -38,19 +38,18 @@ public class UnmarkCommand extends Command {
      * @param storage The {@link Storage} instance for persisting the updated task list.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         if (index < 0 || index >= tasks.size()) {
-            ui.showText("Invalid task number!");
-            return;
+            return "Invalid task number!";
         }
 
         Task curr = tasks.get(index);
         if (curr.getStatus()) {
             curr.unmark();
             storage.write(tasks);
-            ui.showText("OK, I've marked this task as not done yet:\n  " + curr);
+            return "OK, I've marked this task as not done yet:\n  " + curr;
         } else {
-            ui.showText("The task is already unmarked!");
+            return "The task is already unmarked!";
         }
     }
 

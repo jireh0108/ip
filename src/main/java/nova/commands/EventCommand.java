@@ -61,25 +61,22 @@ public class EventCommand extends Command {
      * @param storage The current {@link Storage} instance for persisting tasks.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         if (from == null || to == null) {
-            ui.showText("Usage: event <description> /from <start> /to <end>");
-            return;
+            return "Usage: event <description> /from <start> /to <end>";
         }
 
         LocalDateTime start = Parser.parseDateTime(from);
         LocalDateTime end = Parser.parseDateTime(to);
         if (start == null || end == null) {
-            return;
+            return "";
         }
 
         Task curr = new Event(description, start, end);
         tasks.add(curr);
         storage.write(tasks);
-        ui.showText(
-                "Got it. I've added this task:\n  " + curr
-                        + "\nNow you have " + tasks.size() + " tasks in the list."
-        );
+        return "Got it. I've added this task:\n  " + curr
+                        + "\nNow you have " + tasks.size() + " tasks in the list.";
     }
 
     /**

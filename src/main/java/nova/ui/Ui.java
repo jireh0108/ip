@@ -13,7 +13,6 @@ public class Ui {
     /**
      * Dividing line to separate Nova's responses
      */
-    protected final String dividingLine = "____________________________________________________________";
     protected Scanner scanner;
 
     public Ui() {
@@ -21,28 +20,21 @@ public class Ui {
     }
 
     /**
-     * Prints out dividing line
-     */
-    public void showLine() {
-        System.out.println(dividingLine);
-    }
-
-    /**
      * Prints out welcome message
      */
-    public void showWelcome() {
-        System.out.println(dividingLine
-                + "\nHello! I'm Nova :3\n"
-                + "What can I do for you?\n"
-                + "Enter \"help\" to see available commands!\n"
-                + dividingLine);
+    public String showWelcome() {
+        return """
+                Hello! I'm Nova :3
+                What can I do for you?
+                Enter "help" to see available commands!
+                """;
     }
 
     /**
      * Displays loading error message
      */
-    public void showLoadingError() {
-        System.out.println(dividingLine + "Loading failed...");
+    public String showLoadingError() {
+        return "Loading failed...";
     }
 
     /**
@@ -55,14 +47,7 @@ public class Ui {
     /**
      * Displays error message
      */
-    public void showError(String msg) {
-        System.out.println("Error: " + msg);
-    }
-
-    /**
-     * Displays given message
-     */
-    public void showText(String msg) {
-        System.out.println(msg);
+    public String showError(String msg) {
+        return "Error: " + msg;
     }
 }

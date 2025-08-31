@@ -21,7 +21,7 @@ public abstract class Command {
      * @param ui      Current Ui of the Nova instance.
      * @param storage Current Storage of the Nova instance.
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage);
+    public abstract String execute(TaskList tasks, Ui ui, Storage storage);
 
     /**
      * Returns boolean flag for exiting the program.

@@ -21,8 +21,8 @@ public class ExitCommand extends Command {
      * @param storage The {@link Storage} instance (not modified by this command).
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showText("Bye! Hope to see you again soon!");
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
+        return "Bye! Hope to see you again soon!";
     }
 
     /**

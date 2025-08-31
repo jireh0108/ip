@@ -41,21 +41,20 @@ public class DeadlineCommand extends Command {
      * @param storage The current {@link Storage} instance for persisting tasks.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         if (by == null) {
-            ui.showText("Usage: deadline <description> /by <deadline>");
-            return;
+            return "Usage: deadline <description> /by <deadline>";
         }
         LocalDateTime deadline = Parser.parseDateTime(by);
         if (deadline == null) {
-            return;
+            return "";
         }
 
         Task curr = new Deadline(description, deadline);
         tasks.add(curr);
         storage.write(tasks);
-        ui.showText("Got it. I've added this task:\n  " + curr
-                + "\nNow you have " + tasks.size() + " tasks in the list.");
+        return "Got it. I've added this task:\n  " + curr
+                + "\nNow you have " + tasks.size() + " tasks in the list.";
     }
 
     /**
