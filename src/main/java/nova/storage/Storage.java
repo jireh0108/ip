@@ -14,13 +14,19 @@ import nova.tasks.Task;
 import nova.tasks.TaskList;
 import nova.tasks.ToDo;
 
+/**
+ * Represents storage for Nova's tasks. Handles reading from and writing to a file
+ * to persist TaskList objects between sessions.
+ */
 public class Storage {
-    /**
-     * File to be read and written to
-     */
+    /** File used to store tasks */
     private final File tasksFile;
-    ;
 
+    /**
+     * Constructs a Storage object that manages the given file path.
+     *
+     * @param filePath Path to the file used for storing tasks.
+     */
     public Storage(String filePath) {
         this.tasksFile = new File(filePath);
         try {
@@ -29,21 +35,24 @@ public class Storage {
             }
             tasksFile.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create data file: " + tasksFile.getAbsolutePath(), e);
+            throw new RuntimeException(
+                    "Failed to create data file: " + tasksFile.getAbsolutePath(), e);
         }
     }
 
     /**
-     * Reads Strings from a .txt file as Tasks and returns a TaskList object.
+     * Loads tasks from the storage file and converts them into a TaskList.
      *
-     * @return TaskList object.
+     * @return TaskList containing tasks loaded from the file.
      */
     public TaskList load() {
         TaskList loadedTasks = new TaskList();
         try (Scanner fileScanner = new Scanner(tasksFile)) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine().trim();
-                if (line.isEmpty()) continue;
+                if (line.isEmpty()) {
+                    continue;
+                }
 
                 String[] parts = line.split(" \\| ");
                 String type = parts[0];
@@ -51,52 +60,76 @@ public class Storage {
                 Task task = null;
 
                 switch (type) {
-                case "T":
+                case "T": {
                     task = new ToDo(parts[2]);
                     break;
-                case "D":
+                }
+                case "D": {
                     LocalDateTime deadline = parseDateTime(parts[3]);
-                    if (deadline != null) task = new Deadline(parts[2], deadline);
+                    if (deadline != null) {
+                        task = new Deadline(parts[2], deadline);
+                    }
                     break;
-                case "E":
+                }
+                case "E": {
                     LocalDateTime from = parseDateTime(parts[3]);
                     LocalDateTime to = parseDateTime(parts[4]);
-                    if (from != null && to != null) task = new Event(parts[2], from, to);
+                    if (from != null && to != null) {
+                        task = new Event(parts[2], from, to);
+                    }
                     break;
+                }
+                default: {
+                    System.err.println("Warning: unknown task type '" + type + "' in file "
+                            + tasksFile.getAbsolutePath());
+                    break;
+                }
                 }
 
                 if (task != null) {
-                    if (isDone) task.mark();
+                    if (isDone) {
+                        task.mark();
+                    }
                     loadedTasks.add(task);
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading tasks from file: " + tasksFile.getAbsolutePath());
+            System.err.println(
+                    "Error reading tasks from file: " + tasksFile.getAbsolutePath());
         }
 
         return loadedTasks;
     }
 
     /**
-     * Reads Tasks from a TaskList object and writes them as Strings to the Storage object's taskFile.
+     * Writes the given TaskList to the storage file.
      *
-     * @param tasks TaskList object.
+     * @param tasks TaskList to write to the file.
      */
     public void write(TaskList tasks) {
         try (FileWriter writer = new FileWriter(tasksFile, false)) { // overwrite
             for (Task task : tasks) {
-                String line = "";
+                String line;
                 if (task instanceof ToDo) {
-                    line = "T | " + (task.getStatus() ? "1" : "0") + " | " + task.getDescription();
+                    line = "T | " + (task.getStatus() ? "1" : "0")
+                            + " | " + task.getDescription();
                 } else if (task instanceof Deadline d) {
-                    line = "D | " + (task.getStatus() ? "1" : "0") + " | " + d.getDescription() + " | " + d.getBy();
+                    line = "D | " + (task.getStatus() ? "1" : "0")
+                            + " | " + d.getDescription()
+                            + " | " + d.getBy();
                 } else if (task instanceof Event e) {
-                    line = "E | " + (task.getStatus() ? "1" : "0") + " | " + e.getDescription() + " | " + e.getFrom() + " | " + e.getTo();
+                    line = "E | " + (task.getStatus() ? "1" : "0")
+                            + " | " + e.getDescription()
+                            + " | " + e.getFrom()
+                            + " | " + e.getTo();
+                } else {
+                    line = ""; // fallback for unknown task types
                 }
                 writer.write(line + "\n");
             }
         } catch (IOException e) {
-            System.err.println("Error writing tasks to file: " + tasksFile.getAbsolutePath());
+            System.err.println(
+                    "Error writing tasks to file: " + tasksFile.getAbsolutePath());
         }
     }
 }

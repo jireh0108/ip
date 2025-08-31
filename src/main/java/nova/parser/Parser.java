@@ -22,6 +22,13 @@ import nova.exceptions.IncorrectDateException;
 import nova.exceptions.NovaException;
 import nova.exceptions.UnknownCommandException;
 
+/**
+ * Utility class for parsing user input into {@link Command} objects or date/time objects.
+ * <p>
+ * Provides methods to interpret command strings and date/time strings, throwing
+ * appropriate exceptions for invalid input.
+ * </p>
+ */
 public class Parser {
     /**
      * Parses through user's input to either return a Command or throw an error for unreadable input.
@@ -113,6 +120,7 @@ public class Parser {
         try {
             return LocalDateTime.parse(dateStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } catch (DateTimeParseException ignored) {
+            // Ignored: try next format
         }
 
         // try ISO date only
@@ -120,6 +128,7 @@ public class Parser {
             LocalDate date = LocalDate.parse(dateStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE);
             return date.atStartOfDay();
         } catch (DateTimeParseException ignored) {
+            // Ignored: try next format
         }
 
         // try custom formats
@@ -140,10 +149,10 @@ public class Parser {
                     LocalDate date = LocalDate.parse(dateStr.trim(), fmt);
                     return date.atStartOfDay();
                 } catch (DateTimeParseException ignored2) {
+                    // Ignored: try next format
                 }
             }
         }
-
         throw new IncorrectDateException();
     }
 }

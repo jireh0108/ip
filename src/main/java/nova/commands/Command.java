@@ -3,7 +3,15 @@ package nova.commands;
 import nova.storage.Storage;
 import nova.tasks.TaskList;
 import nova.ui.Ui;
-
+/**
+ * Represents an abstract command in the Nova application.
+ * <p>
+ * All specific commands (e.g., DeadlineCommand, TodoCommand) should extend this class
+ * and implement the {@link #execute(TaskList, Ui, Storage)} method to define their behavior.
+ * This class also provides a default {@link #isExit()} method, which can be overridden
+ * by commands that should terminate the program (e.g., ExitCommand).
+ * </p>
+ */
 public abstract class Command {
     public Command() {}
     /**
