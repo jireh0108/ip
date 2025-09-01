@@ -1,0 +1,76 @@
+package nova.ui;
+
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import nova.Nova;
+
+
+/**
+ * Controller for the main GUI.
+ */
+public class MainWindow extends AnchorPane {
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private VBox dialogContainer;
+    @FXML
+    private TextField userInput;
+    @FXML
+    private Button sendButton;
+
+    private Nova nova;
+
+    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
+    private Image novaImage = new Image(this.getClass().getResourceAsStream("/images/nova.png"));
+
+    @FXML
+    public void initialize() {
+        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+    }
+
+    /** Injects the Duke instance */
+    public void setNova(Nova d) {
+        nova = d;
+        showWelcome();
+    }
+
+    /**
+     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
+     * the dialog container. Clears the user input after processing.
+     */
+    @FXML
+    private void handleUserInput() {
+        String input = userInput.getText();
+        String response = nova.getResponse(input);
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(input, userImage),
+                DialogBox.getNovaDialog(response, novaImage)
+        );
+        userInput.clear();
+        if ("bye".equalsIgnoreCase(input.trim())) {
+            // wait 1.5 seconds before closing so the goodbye message shows
+            PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
+            delay.setOnFinished(event -> Platform.exit());
+            delay.play();
+        }
+    }
+    /**
+     * Creates 1 dialog box, showing Nova's welcome message.
+     */
+    @FXML
+    private void showWelcome() {
+        String welcome = nova.getWelcome();
+        dialogContainer.getChildren().addAll(
+                DialogBox.getNovaDialog(welcome, novaImage)
+        );
+        userInput.clear();
+    }
+}

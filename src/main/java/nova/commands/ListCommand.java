@@ -21,12 +21,11 @@ public class ListCommand extends Command {
      * @param storage The {@link Storage} instance (not used by this command).
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         if (tasks.isEmpty()) {
-            ui.showText("There are no tasks! Try \"help\" for commands!");
-            return;
+            return "There are no tasks! Try \"help\" for commands!";
         }
-        ui.showText("Here are the tasks in your list:\n" + tasks);
+        return "Here are the tasks in your list:\n" + tasks;
     }
 
     /**

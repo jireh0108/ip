@@ -44,13 +44,13 @@ public class FindCommand extends Command {
      * @param storage The {@link Storage} instance (not used in this command).
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         for (Task task : tasks) {
             if (task.getDescription().contains(this.searchTerm)) {
                 results.add(task);
             }
         }
-        ui.showText("Here are the matching tasks in your list:\n" + results);
+        return "Here are the matching tasks in your list:\n" + results;
     }
 
     /**

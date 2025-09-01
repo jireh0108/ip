@@ -21,8 +21,8 @@ public class HelpCommand extends Command {
      * @param storage The {@link Storage} instance (not used by this command).
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showText("""
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
+        return """
                 Here are the available commands:
                   todo <description>
                   deadline <description> /by <date>
@@ -33,7 +33,7 @@ public class HelpCommand extends Command {
                   unmark <task number>
                   delete <task number>
                   help
-                  bye""");
+                  bye""";
     }
 
     /**

@@ -36,19 +36,16 @@ public class DeleteCommand extends Command {
      * @param storage The current {@link Storage} instance for persisting tasks.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         if (index < 0 || index >= tasks.size()) {
-            ui.showText("Invalid task number!");
-            return;
+            return "Invalid task number!";
         }
 
         Task curr = tasks.get(index);
         tasks.remove(index);
         storage.write(tasks);
-        ui.showText(
-                "Noted. I've removed this task:\n  " + curr
-                        + "\nNow you have " + tasks.size() + " tasks in the list."
-        );
+        return "Noted. I've removed this task:\n  " + curr
+                        + "\nNow you have " + tasks.size() + " tasks in the list.";
     }
 
     /**

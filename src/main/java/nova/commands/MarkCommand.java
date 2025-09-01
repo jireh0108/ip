@@ -38,19 +38,18 @@ public class MarkCommand extends Command {
      * @param storage The {@link Storage} instance for persisting the updated task list.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         if (index < 0 || index >= tasks.size()) {
-            ui.showText("Invalid task number!");
-            return;
+            return "Invalid task number!";
         }
 
         Task curr = tasks.get(index);
         if (!curr.getStatus()) {
             curr.mark();
             storage.write(tasks);
-            ui.showText("Nice! I've marked this task as done:\n  " + curr);
+            return "Nice! I've marked this task as done:\n  " + curr;
         } else {
-            ui.showText("The task is already marked!");
+            return "The task is already marked!";
         }
     }
 
