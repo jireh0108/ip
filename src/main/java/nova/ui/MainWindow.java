@@ -1,6 +1,7 @@
 package nova.ui;
 
-import nova.Nova;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -8,6 +9,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import nova.Nova;
+
 
 /**
  * Controller for the main GUI.
@@ -51,6 +55,12 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getNovaDialog(response, novaImage)
         );
         userInput.clear();
+        if ("bye".equalsIgnoreCase(input.trim())) {
+            // wait 1.5 seconds before closing so the goodbye message shows
+            PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
+            delay.setOnFinished(event -> Platform.exit());
+            delay.play();
+        }
     }
     /**
      * Creates 1 dialog box, showing Nova's welcome message.

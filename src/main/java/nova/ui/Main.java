@@ -2,13 +2,12 @@ package nova.ui;
 
 import java.io.IOException;
 
-import nova.Nova;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
+import nova.Nova;
 /**
  * A GUI for Duke using FXML.
  */

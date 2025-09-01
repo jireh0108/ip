@@ -1,5 +1,6 @@
 package nova;
 
+import javafx.application.Application;
 import nova.commands.Command;
 import nova.exceptions.NovaException;
 import nova.parser.Parser;
@@ -7,9 +8,6 @@ import nova.storage.Storage;
 import nova.tasks.TaskList;
 import nova.ui.Main;
 import nova.ui.Ui;
-
-import javafx.application.Application;
-
 /**
  * Nova is the main class that runs the task management application.
  * It handles the initialization of the Storage, TaskList, and Ui,
