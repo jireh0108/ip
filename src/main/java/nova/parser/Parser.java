@@ -116,32 +116,44 @@ public class Parser {
      * @throws IncorrectDateException if user's input is unreadable.
      */
     public static LocalDateTime parseDateTime(String dateStr) throws IncorrectDateException {
-        // try ISO date and time
+        // try ISO date-time and ISO date first
         try {
             return LocalDateTime.parse(dateStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } catch (DateTimeParseException ignored) {
-            // Ignored: try next format
+            //keep trying
         }
 
-        // try ISO date only
         try {
             LocalDate date = LocalDate.parse(dateStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE);
             return date.atStartOfDay();
         } catch (DateTimeParseException ignored) {
-            // Ignored: try next format
+            // keep trying
         }
 
-        // try custom formats
-        DateTimeFormatter[] customFormats = {
+        // fallback to custom formats
+        LocalDateTime result = tryParseWithFormats(dateStr,
                 DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
                 DateTimeFormatter.ofPattern("d/M/yyyy"),
                 DateTimeFormatter.ofPattern("d MMM yyyy HHmm"),
                 DateTimeFormatter.ofPattern("d MMM yyyy"),
                 DateTimeFormatter.ofPattern("MMM d yyyy HHmm"),
-                DateTimeFormatter.ofPattern("MMM d yyyy"),
-        };
+                DateTimeFormatter.ofPattern("MMM d yyyy")
+        );
 
-        for (DateTimeFormatter fmt : customFormats) {
+        if (result != null) {
+            return result;
+        }
+        throw new IncorrectDateException();
+    }
+
+    /**
+     * Cleaner way of parsing with different date formats.
+     * @param dateStr date input
+     * @param formatters different date formats
+     * @return LocalDateTime
+     */
+    private static LocalDateTime tryParseWithFormats(String dateStr, DateTimeFormatter... formatters) {
+        for (DateTimeFormatter fmt : formatters) {
             try {
                 return LocalDateTime.parse(dateStr.trim(), fmt);
             } catch (DateTimeParseException ignored) {
@@ -149,10 +161,10 @@ public class Parser {
                     LocalDate date = LocalDate.parse(dateStr.trim(), fmt);
                     return date.atStartOfDay();
                 } catch (DateTimeParseException ignored2) {
-                    // Ignored: try next format
+                    // keep trying
                 }
             }
         }
-        throw new IncorrectDateException();
+        return null;
     }
 }
