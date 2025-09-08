@@ -53,6 +53,7 @@ application {
 
 shadowJar {
     archiveBaseName = "nova"
+    archiveFileName = 'nova.jar'
     archiveClassifier = null
 }
 
