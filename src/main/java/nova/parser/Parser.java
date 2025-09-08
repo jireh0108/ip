@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.function.Function;
 
 import nova.commands.Command;
 import nova.commands.DeadlineCommand;
@@ -21,6 +22,10 @@ import nova.exceptions.IncorrectCommandException;
 import nova.exceptions.IncorrectDateException;
 import nova.exceptions.NovaException;
 import nova.exceptions.UnknownCommandException;
+import nova.tasks.Deadline;
+import nova.tasks.Event;
+import nova.tasks.Task;
+import nova.tasks.ToDo;
 
 /**
  * Utility class for parsing user input into {@link Command} objects or date/time objects.
@@ -105,6 +110,50 @@ public class Parser {
         default:
             throw new UnknownCommandException();
         }
+    }
+    /**
+     * Parses through a String taken from storage text to
+     * either return a Command or throw an error for unreadable input.
+     *
+     * @param line Input from storage.
+     * @return Task based on input.
+     */
+    public static Task parseStorageTaskString(String line) {
+        String[] parts = line.split(" \\| ");
+        if (parts.length < 3) {
+            System.err.println("Invalid task line: " + line);
+            return null;
+        }
+
+        String type = parts[0];
+        boolean isDone = parts[1].equals("1");
+        Task task = null;
+
+        switch (type) {
+        case "T" -> task = new ToDo(parts[2]);
+        case "D" -> {
+            LocalDateTime deadline = parseDateTime(parts[3]);
+            if (deadline != null) {
+                task = new Deadline(parts[2], deadline);
+            }
+        }
+        case "E" -> {
+            LocalDateTime from = parseDateTime(parts[3]);
+            LocalDateTime to = parseDateTime(parts[4]);
+            if (from != null && to != null) {
+                task = new Event(parts[2], from, to);
+            }
+        }
+        default -> {
+            System.err.println("Warning: unknown task type");
+            assert false : "Unexpected task type: " + type;
+        }
+        }
+
+        if (task != null && isDone) {
+            task.mark();
+        }
+        return task;
     }
 
     /**
