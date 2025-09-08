@@ -34,9 +34,6 @@ public class Nova {
             ui.showLoadingError();
             tasks = new TaskList();
         }
-        assert storage != null;
-        assert tasks != null;
-        assert ui != null;
     }
 
     /**

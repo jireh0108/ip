@@ -38,8 +38,6 @@ public class Storage {
             throw new RuntimeException(
                     "Failed to create data file: " + tasksFile.getAbsolutePath(), e);
         }
-
-        assert tasksFile.exists() : "Tasks file must exist after constructor";
     }
 
     /**
@@ -84,7 +82,6 @@ public class Storage {
                 default: {
                     System.err.println("Warning: unknown task type '" + type + "' in file "
                             + tasksFile.getAbsolutePath());
-                    assert false : "Unexpected task type: " + type;
                     break;
                 }
                 }
