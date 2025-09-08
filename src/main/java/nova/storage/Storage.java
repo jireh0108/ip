@@ -1,11 +1,8 @@
 package nova.storage;
 
-import static nova.parser.Parser.parseDateTime;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 import nova.parser.Parser;
@@ -54,7 +51,9 @@ public class Storage {
         try (Scanner fileScanner = new Scanner(tasksFile)) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine().trim();
-                if (line.isEmpty()) continue;
+                if (line.isEmpty()) {
+                    continue;
+                }
 
                 Task task = Parser.parseStorageTaskString(line);
                 if (task != null) {

@@ -1,9 +1,12 @@
 package nova.parser;
 
+import static java.util.Map.entry;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Map;
 import java.util.function.Function;
 
 import nova.commands.Command;
@@ -35,81 +38,76 @@ import nova.tasks.ToDo;
  * </p>
  */
 public class Parser {
+
+    private static final Map<String, Function<String, Command>> COMMAND_MAP = Map.ofEntries(
+            entry("list", args -> new ListCommand()),
+            entry("help", args -> new HelpCommand()),
+            entry("bye", args -> new ExitCommand()),
+            entry("mark", args -> new MarkCommand(parseIndex(args, new MarkCommand(-1)))),
+            entry("unmark", args -> new UnmarkCommand(parseIndex(args, new UnmarkCommand(-1)))),
+            entry("delete", args -> new DeleteCommand(parseIndex(args, new DeleteCommand(-1)))),
+            entry("todo", args -> parseNonEmpty(args, TodoCommand::new, new TodoCommand(""))),
+            entry("deadline", args -> parseNonEmpty(args, DeadlineCommand::new, new DeadlineCommand(""))),
+            entry("event", args -> parseNonEmpty(args, EventCommand::new, new EventCommand(""))),
+            entry("schedule", args -> parseNonEmpty(args, ScheduleCommand::new, new ScheduleCommand(""))),
+            entry("find", args -> parseNonEmpty(args, FindCommand::new, new FindCommand("")))
+    //add new command here
+    );
     /**
-     * Parses through user's input to either return a Command or throw an error for unreadable input.
+     * Parses a user input string into a {@link Command} object.
+     * The input string is expected to start with a command keyword (e.g., "todo", "mark"),
+     * optionally followed by arguments separated by a space. This method looks up the
+     * command in the {@link #COMMAND_MAP} and applies the corresponding constructor/lambda.
      *
-     * @param line User's input.
-     * @return Command based on user's input.
-     * @throws NovaException if user's input is unreadable.
+     * @param line the raw input string entered by the user
+     * @return the {@link Command} object corresponding to the input
+     * @throws NovaException if the command is unknown or if the arguments are invalid
      */
     public static Command parse(String line) throws NovaException {
         String[] parts = line.trim().split(" ", 2);
         String commandWord = parts[0].toLowerCase();
+        String args = parts.length > 1 ? parts[1] : null;
 
-        switch (commandWord) {
-        case "list":
-            return new ListCommand();
-
-        case "mark":
-            if (parts.length < 2 || !parts[1].matches("\\d+")) {
-                throw new IncorrectCommandException(new MarkCommand(-1));
-            }
-            int markIndex = Integer.parseInt(parts[1]) - 1;
-            return new MarkCommand(markIndex);
-
-        case "unmark":
-            if (parts.length < 2 || !parts[1].matches("\\d+")) {
-                throw new IncorrectCommandException(new UnmarkCommand(-1));
-            }
-            int unmarkIndex = Integer.parseInt(parts[1]) - 1;
-            return new UnmarkCommand(unmarkIndex);
-
-        case "todo":
-            if (parts.length < 2 || parts[1].isBlank()) {
-                throw new IncorrectCommandException(new TodoCommand(""));
-            }
-            return new TodoCommand(parts[1]);
-
-        case "deadline":
-            if (parts.length < 2 || parts[1].isBlank()) {
-                throw new IncorrectCommandException(new DeadlineCommand(""));
-            }
-            return new DeadlineCommand(parts[1]);
-
-        case "event":
-            if (parts.length < 2 || parts[1].isBlank()) {
-                throw new IncorrectCommandException(new EventCommand(""));
-            }
-            return new EventCommand(parts[1]);
-
-        case "delete":
-            if (parts.length < 2 || !parts[1].matches("\\d+")) {
-                throw new IncorrectCommandException(new DeleteCommand(-1));
-            }
-            int deleteIndex = Integer.parseInt(parts[1]) - 1;
-            return new DeleteCommand(deleteIndex);
-
-        case "schedule":
-            if (parts.length < 2 || parts[1].isBlank()) {
-                throw new IncorrectCommandException(new ScheduleCommand(""));
-            }
-            return new ScheduleCommand(parts[1]);
-
-        case "find":
-            if (parts.length < 2 || parts[1].isBlank()) {
-                throw new IncorrectCommandException(new FindCommand(""));
-            }
-            return new FindCommand(parts[1]);
-
-        case "help":
-            return new HelpCommand();
-
-        case "bye":
-            return new ExitCommand();
-
-        default:
+        Function<String, Command> constructor = COMMAND_MAP.get(commandWord);
+        if (constructor == null) {
             throw new UnknownCommandException();
         }
+
+        return constructor.apply(args);
+    }
+    /**
+     * Parses a numeric argument string into a zero-based task index.
+     * Validates that the argument is a positive integer. If the argument is null or invalid,
+     * throws an {@link IncorrectCommandException} with the provided fallback command.
+     *
+     * @param arg the argument string to parse
+     * @param fallback the command to use in the exception if parsing fails
+     * @return the zero-based index represented by the argument
+     * @throws NovaException if the argument is invalid
+     */
+    private static int parseIndex(String arg, Command fallback) throws NovaException {
+        if (arg == null || !arg.matches("\\d+")) {
+            throw new IncorrectCommandException(fallback);
+        }
+        return Integer.parseInt(arg) - 1;
+    }
+    /**
+     * Parses a non-empty string argument and applies a factory to produce a {@link Command}.
+     * Validates that the argument is not null or blank. If it is invalid, throws an
+     * {@link IncorrectCommandException} using the provided fallback command.
+     *
+     * @param arg the argument string to parse
+     * @param factory a function that creates a {@link Command} from a valid argument
+     * @param fallback the command to use in the exception if the argument is invalid
+     * @return the {@link Command} produced by the factory
+     * @throws NovaException if the argument is null or blank
+     */
+    private static Command parseNonEmpty(String arg, Function<String, Command> factory, Command fallback)
+            throws NovaException {
+        if (arg == null || arg.isBlank()) {
+            throw new IncorrectCommandException(fallback);
+        }
+        return factory.apply(arg);
     }
     /**
      * Parses through a String taken from storage text to
