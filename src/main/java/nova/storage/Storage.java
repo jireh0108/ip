@@ -1,13 +1,11 @@
 package nova.storage;
 
-import static nova.parser.Parser.parseDateTime;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
+import nova.parser.Parser;
 import nova.tasks.Deadline;
 import nova.tasks.Event;
 import nova.tasks.Task;
@@ -49,6 +47,7 @@ public class Storage {
      */
     public TaskList load() {
         TaskList loadedTasks = new TaskList();
+
         try (Scanner fileScanner = new Scanner(tasksFile)) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine().trim();
@@ -56,49 +55,13 @@ public class Storage {
                     continue;
                 }
 
-                String[] parts = line.split(" \\| ");
-                String type = parts[0];
-                boolean isDone = parts[1].equals("1");
-                Task task = null;
-
-                switch (type) {
-                case "T": {
-                    task = new ToDo(parts[2]);
-                    break;
-                }
-                case "D": {
-                    LocalDateTime deadline = parseDateTime(parts[3]);
-                    if (deadline != null) {
-                        task = new Deadline(parts[2], deadline);
-                    }
-                    break;
-                }
-                case "E": {
-                    LocalDateTime from = parseDateTime(parts[3]);
-                    LocalDateTime to = parseDateTime(parts[4]);
-                    if (from != null && to != null) {
-                        task = new Event(parts[2], from, to);
-                    }
-                    break;
-                }
-                default: {
-                    System.err.println("Warning: unknown task type '" + type + "' in file "
-                            + tasksFile.getAbsolutePath());
-                    assert false : "Unexpected task type: " + type;
-                    break;
-                }
-                }
-
+                Task task = Parser.parseStorageTaskString(line);
                 if (task != null) {
-                    if (isDone) {
-                        task.mark();
-                    }
                     loadedTasks.add(task);
                 }
             }
         } catch (IOException e) {
-            System.err.println(
-                    "Error reading tasks from file: " + tasksFile.getAbsolutePath());
+            System.err.println("Error reading tasks from file: " + tasksFile.getAbsolutePath());
         }
 
         return loadedTasks;
