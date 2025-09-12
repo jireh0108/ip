@@ -1,0 +1,41 @@
+.chat-container {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 10;
+}
+
+.chat-bubble {
+    -fx-background-color: #e1ffc7;
+    -fx-background-radius: 15;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.avatar {
+    -fx-clip: "circle";
+}
+
+.input-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 5;
+}
+
+.input-field {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #cccccc;
+    -fx-padding: 5 10 5 10;
+}
+
+.send-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-font-weight: bold;
+}
+
+.send-button:hover {
+    -fx-background-color: #45a049;
+}

@@ -49,12 +49,22 @@ public class DialogBox extends HBox {
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        var db = new DialogBox(text, img);
+        db.getChildren().setAll(db.dialog, db.displayPicture); // text first, avatar right
+        db.setAlignment(Pos.TOP_RIGHT);
+
+        db.dialog.getStyleClass().add("user-bubble");
+        db.getStyleClass().add("user-container");
+        return db;
     }
 
     public static DialogBox getNovaDialog(String text, Image img) {
         var db = new DialogBox(text, img);
-        db.flip();
+        db.getChildren().setAll(db.displayPicture, db.dialog); // avatar left, text right
+        db.setAlignment(Pos.TOP_LEFT);
+
+        db.dialog.getStyleClass().add("nova-bubble");
+        db.getStyleClass().add("nova-container");
         return db;
     }
 }
