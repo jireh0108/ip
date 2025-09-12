@@ -23,11 +23,11 @@ A simple task management chatbot that helps you track to dos, deadlines, and eve
 1. Ensure you have Java ```17``` or above installed in your Computer.
 Mac users: Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-2. Download the latest ```.jar``` file from here.
+2. Download the latest ```.jar``` file from [here](https://github.com/jireh0108/ip/releases).
 
-3. Copy the file to the folder you want to use as the home folder for your AddressBook.
+3. Copy the file to the folder you want to use as the home folder for Nova.
 
-4. Open a command terminal, ```cd``` into the folder you put the jar file in, and use the ```java -jar addressbook.jar``` command to run the application.  A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data. ![Ui.png](Ui.png)
+4. Open a command terminal, ```cd``` into the folder you put the jar file in, and use the ```java -jar nova.jar``` command to run the application.  A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data. ![Ui.png](Ui.png)
 
 5. Type the command in the command box and press Enter or the Send Button to execute it. e.g. typing help and pressing Enter will show the available commands.
    Some example commands you can try: 
@@ -114,10 +114,14 @@ Nova's data is saved in the hard disk automatically after any command that chang
 ### Editing the data file
 Nova's data is saved automatically as a .txt file [JAR file location]/data/tasks.txt. Advanced users are welcome to update data directly by editing that data file.
 
+---
+
 ## FAQ
 Q: How do I transfer my data to another Computer?
 
 A: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Nova home folder.
+
+---
 
 ## Command summary
 
