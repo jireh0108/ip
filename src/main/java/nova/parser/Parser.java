@@ -194,7 +194,7 @@ public class Parser {
     }
 
     /**
-     * Cleaner way of parsing with different date formats.
+     * Parses a date String with different formatters.
      * @param dateStr date input
      * @param formatters different date formats
      * @return LocalDateTime

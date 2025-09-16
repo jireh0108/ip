@@ -12,7 +12,9 @@ public class Task {
      */
     protected boolean isDone;
     /**
-     * Description of the task
+     * Constructs a new Task with the specified description.
+     *
+     * @param description the text description of the event
      */
     public Task(String description) {
         assert description != null : "Task description must not be null";
